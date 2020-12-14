@@ -18,6 +18,7 @@ public class JerkSonParserList {
     int breadCounter=0;
     int appleCounter=0;
     //LinkedHashMap<Double ,Integer> prices = new LinkedHashMap<>();
+    //Will try later to see if only one hashMap can be used.
     LinkedHashMap<Double ,Integer> priceMapMilk = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapCookies = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapBread = new LinkedHashMap<>();
