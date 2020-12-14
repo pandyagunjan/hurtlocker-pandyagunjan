@@ -14,7 +14,11 @@ public class JerkSonParserList {
     int cookieCounter=0;
     int breadCounter=0;
     int appleCounter=0;
-    LinkedHashMap<Double ,Integer> priceMap = new LinkedHashMap<>();
+    LinkedHashMap<Double ,Integer> priceMapMilk = new LinkedHashMap<>();
+    LinkedHashMap<Double ,Integer> priceMapCookies = new LinkedHashMap<>();
+    LinkedHashMap<Double ,Integer> priceMapBread = new LinkedHashMap<>();
+    LinkedHashMap<Double ,Integer> priceMapApples = new LinkedHashMap<>();
+    LinkedHashMap<String ,LinkedHashMap<Double,Integer>> productMap=new LinkedHashMap<>();
 
     public void pasreTheLine(String output) {
         //Variable to catch the returned group data and store in object
@@ -49,53 +53,82 @@ public class JerkSonParserList {
         System.out.println("*********** ITEMS WITHOUT ERRORS ****************");
         for (Product p: products) {
             System.out.println(p.toString());
-
         }
-        //Browse through the arrayList without errors to display fancy output.
 
+        //Based on the Name : Apples ,Cookies, Milk Or Bread, popualte the HashMaps
+        populateMapsBasedonName(); //returns boolean, not capturing it as added for TDD only.
+
+        System.out.println(productMap);
+    }
+
+    private Boolean populateMapsBasedonName() {
+        Boolean flag= false;
         for (int i = 0; i < products.size(); i++) {
             Product p = products.get(i);
             if(p.getName().equalsIgnoreCase("Milk"))
             {
-                milkCounter++;
-                Integer temp=priceMap.getOrDefault(p.getPrice(),0);
-                priceMap.put(p.getPrice(), temp+1);
+                flag = populateMilkHashMap(p);
             }
            else
-            if(p.getName().equalsIgnoreCase("Cookies") || p.getName().equalsIgnoreCase("Co0kieS"))
+            if(p.getName().equals("Co0kieS") || p.getName().equalsIgnoreCase("Cookies"))
             {
-                cookieCounter++;
-                Integer temp=priceMap.getOrDefault(p.getPrice(),0);
-                priceMap.put(p.getPrice(), temp+1);
+                flag = populateCookiesHashMap(p);
             }
             else
-            if(p.getName().equalsIgnoreCase("BrEAD"))
+            if(p.getName().equalsIgnoreCase("Bread"))
             {
-
-                breadCounter++;
-                Integer temp=priceMap.getOrDefault(p.getPrice(),0);
-                priceMap.put(p.getPrice(), temp+1);
+                flag = populateBreadHashMap(p);
             }
             else
-            if(p.getName().equalsIgnoreCase("apPles"))
+            if(p.getName().equalsIgnoreCase("Apples"))
             {
-
-                breadCounter++;
-                Integer temp=priceMap.getOrDefault(p.getPrice(),0);
-                priceMap.put(p.getPrice(), temp+1);
+                flag = populateApplesHashMap(p);
             }
-
-
         }
+       return flag;
+    }
 
 
-        for( Map.Entry<Double,Integer> entry : priceMap.entrySet()){
-            Double key = entry.getKey();
-            Integer counter=entry.getValue();
-            System.out.printf("%5.2f , %d " ,key, counter);
-        }
+    private Boolean populateApplesHashMap(Product p) {
+        Boolean flag;
+        appleCounter++;
+        Integer temp=priceMapApples.getOrDefault(p.getPrice(),0);
+        priceMapApples.put(p.getPrice(), temp+1);
+        productMap.put("Apples" , priceMapApples);
+        flag=true;
+        return flag;
+    }
+
+    private Boolean populateBreadHashMap(Product p) {
+        Boolean flag;
+        breadCounter++;
+        Integer temp=priceMapBread.getOrDefault(p.getPrice(),0);
+        priceMapBread.put(p.getPrice(), temp+1);
+        productMap.put("Bread" , priceMapBread);
+        flag=true;
+        return flag;
+    }
 
 
+    private Boolean populateCookiesHashMap(Product p) {
+        Boolean flag;
+        cookieCounter++;
+        Integer temp=priceMapCookies.getOrDefault(p.getPrice(),0);
+        priceMapCookies.put(p.getPrice(), temp+1);
+        productMap.put("Cookies" , priceMapCookies);
+        flag=true;
+        return flag;
+    }
+
+
+    private Boolean populateMilkHashMap(Product p) {
+        Boolean flag;
+        milkCounter++;
+        Integer temp=priceMapMilk.getOrDefault(p.getPrice(),0);
+        priceMapMilk.put(p.getPrice(), temp+1);
+        productMap.put("Milk" , priceMapMilk);
+        flag=true;
+        return flag;
     }
 
 
@@ -139,7 +172,7 @@ public class JerkSonParserList {
 
     private String findAndReturnName() {
         //using + instead of * because if 0 entries found we want to return ""
-        Pattern name = Pattern.compile("([Nn][Aa][Mm][Ee]):([a-zA-Z]+)");
+        Pattern name = Pattern.compile("([Nn][Aa][Mm][Ee]):([a-zA-Z0-9]+)");
         Matcher matcher = name.matcher(parseSingleProduct[0]);
         if (matcher.find()) {
             return matcher.group(2);
