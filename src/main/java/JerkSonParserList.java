@@ -19,47 +19,87 @@ public class JerkSonParserList {
     LinkedHashMap<Double ,Integer> priceMapBread = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapApples = new LinkedHashMap<>();
     LinkedHashMap<String ,LinkedHashMap<Double,Integer>> productMap=new LinkedHashMap<>();
+    StringBuilder str = new StringBuilder();
 
-    public void pasreTheLine(String output) {
-        //Variable to catch the returned group data and store in object
-        String name;
-        String type;
-        Double price;
-        String expiration;
-        //Counter of errors for display
-
+    public void parseTheLineAndPrint(String output) {
         String[] splittedLines;
-        ArrayList<Product> listWithoutErrors;
-        //Split based on ## and Display it
+        //Split output based on ##
         splittedLines = SplitBasedOnDelimeter(output);
-//        for (String s: splittedLines) {
-//            System.out.println(s);
-//        }
+        //Parse each string array element to make product list
+        parseAndCreateProductList(splittedLines);
+        //Remove the errors rows from the list and capture the count of errors.
+        countOfErrors=products.size();
+        countOfErrors= countOfErrors-removeItems(products).size();
+        //Based on the Name : Apples ,Cookies, Milk Or Bread, populate the HashMaps
+        populateMapsBasedonName(); //returns boolean, not capturing it as added for TDD only.
+        formatOutPut(); // Method to format the output
+        System.out.println(str);
+    }
 
-       for(int i=0 ; i < splittedLines.length;i++) {
-           //Split each product entry by ;@^%*!
-           parseSingleProduct = splittedLines[i].split("[;@^%*!]");
-           //Per product , find the group based on field names and populate in the POJO
-           name=findAndReturnName();
-           price= findAndReturnPrice();
-           type= findAndReturnType();
-           expiration= findAndReturnExpirationDate();
-         //  System.out.println(product.toString());
+    //Split each product entry by ;@^%*! to get Name,Price,Type,Expiration and add product in product list.
+    private void parseAndCreateProductList(String[] splittedLines) {
+        //Variable to catch the returned group data and store in object
+        String expiration;
+        String name;
+        Double price;
+        String type;
+        for(int i = 0; i < splittedLines.length; i++) {
+            parseSingleProduct = splittedLines[i].split("[;@^%*!]");
+            name=findAndReturnName();
+            price= findAndReturnPrice();
+            type= findAndReturnType();
+            expiration= findAndReturnExpirationDate();
            products.add(new Product(name,price,type,expiration));
-       }
-        countOfErrors=countNumberOfError(products);
-        //Remove the errors rows from the list
-        listWithoutErrors=removeItems(products);
-        System.out.println("*********** ITEMS WITHOUT ERRORS ****************");
-        for (Product p: products) {
-            System.out.println(p.toString());
+        }
+    }
+//Format the output matching to the expected output.txt file
+    private void formatOutPut() {
+        for(String s : productMap.keySet())
+        {
+            if(s.equals("Milk")) {
+                str.append(String.format("\nname:%8s        seen:%2d times\n", s, milkCounter));
+                str.append("============= \t \t =============\n");
+                for(Map.Entry milk : priceMapMilk.entrySet())
+                {
+                    str.append(String.format("Price:%7s        seen:%2d times\n", milk.getKey(), milk.getValue()));
+                    str.append("-------------        -------------\n");
+                }
+            }
+            else
+            if(s.equals("Bread")) {
+                str.append(String.format("\nname:%8s        seen:%2d times\n", s, breadCounter));
+                str.append("============= \t \t =============\n");
+                for(Map.Entry bread : priceMapBread.entrySet())
+                {
+                    str.append(String.format("Price:%7s        seen:%2d times\n", bread.getKey(), bread.getValue()));
+                    str.append("-------------        -------------\n");
+                }
+            }
+            else
+            if(s.equals("Apples")) {
+                str.append(String.format("\nname:%8s        seen:%2d times\n", s, appleCounter));
+                str.append("============= \t \t =============\n");
+                for(Map.Entry apples : priceMapApples.entrySet())
+                {
+                    str.append(String.format("Price:%7s        seen:%2d times\n", apples.getKey(), apples.getValue()));
+                    str.append("-------------        -------------\n");
+                }
+            }
+           else
+            if(s.equals("Cookies")) {
+                str.append(String.format("\nname:%8s        seen:%2d times\n", s, cookieCounter));
+                str.append("============= \t \t =============\n");
+                for(Map.Entry cookies : priceMapCookies.entrySet())
+                {
+                    str.append(String.format("Price:%7s        seen:%2d times\n", cookies.getKey(), cookies.getValue()));
+                    str.append("-------------        -------------\n");
+                }
+            }
         }
 
-        //Based on the Name : Apples ,Cookies, Milk Or Bread, popualte the HashMaps
-        populateMapsBasedonName(); //returns boolean, not capturing it as added for TDD only.
-
-        System.out.println(productMap);
+        str.append(String.format("\nErrors         	 	 seen: %d times" , countOfErrors));
     }
+
 
     private Boolean populateMapsBasedonName() {
         Boolean flag= false;
@@ -169,7 +209,6 @@ public class JerkSonParserList {
 
     }
 
-
     private String findAndReturnName() {
         //using + instead of * because if 0 entries found we want to return ""
         Pattern name = Pattern.compile("([Nn][Aa][Mm][Ee]):([a-zA-Z0-9]+)");
@@ -185,7 +224,7 @@ public class JerkSonParserList {
     private String[] SplitBasedOnDelimeter(String output) {
         return output.split("#{2}");
     }
-  // Printing output
+
     public ArrayList<Product> removeItems(ArrayList<Product> list) {
         ArrayList<Product> output = list;
         for(int i = 0; i < list.size(); i++){
@@ -194,17 +233,6 @@ public class JerkSonParserList {
             }
         }
         return output;
-    }
-
-    private int countNumberOfError(ArrayList<Product> products) {
-        int countOfErrorsLocal=0;
-        for(int i = 0; i < products.size(); i++){
-            if(products.get(i).getName().equals("") || products.get(i).getPrice() == 0d || products.get(i).getType().equals("") || products.get(i).getExpiration().equals("")){
-                countOfErrorsLocal++;
-            }
-        }
-        return countOfErrorsLocal;
-
     }
 
 }
