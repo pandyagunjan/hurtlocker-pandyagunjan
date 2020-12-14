@@ -5,7 +5,7 @@ public class Product {
     private Double price;
     private String type;
     private String expiration;
-
+//changed date to String
     public Product()
     {
         this.name = "";
