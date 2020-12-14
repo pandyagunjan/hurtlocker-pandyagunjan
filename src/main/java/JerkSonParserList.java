@@ -111,7 +111,7 @@ public class JerkSonParserList {
             }
         }
 
-        str.append(String.format("\nErrors           seen: %d time%s" , countOfErrors,plural(countOfErrors)));
+        str.append(String.format("\nErrors               seen: %d time%s" , countOfErrors,plural(countOfErrors)));
     }
 
     private String plural(Integer value) {

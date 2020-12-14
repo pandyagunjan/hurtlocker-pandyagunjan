@@ -22,4 +22,4 @@ Price:   0.25        seen: 2 times
 Price:   0.23        seen: 2 times
 -------------        -------------
 
-Errors           seen: 4 times
+Errors               seen: 4 times
