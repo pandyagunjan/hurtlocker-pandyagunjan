@@ -1,3 +1,6 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,6 +17,7 @@ public class JerkSonParserList {
     int cookieCounter=0;
     int breadCounter=0;
     int appleCounter=0;
+    LinkedHashMap<Double ,Integer> prices = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapMilk = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapCookies = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapBread = new LinkedHashMap<>();
@@ -21,7 +25,7 @@ public class JerkSonParserList {
     LinkedHashMap<String ,LinkedHashMap<Double,Integer>> productMap=new LinkedHashMap<>();
     StringBuilder str = new StringBuilder();
 
-    public void parseTheLineAndPrint(String output) {
+    public void parseTheLineAndPrint(String output) throws IOException {
         String[] splittedLines;
         //Split output based on ##
         splittedLines = SplitBasedOnDelimeter(output);
@@ -33,7 +37,15 @@ public class JerkSonParserList {
         //Based on the Name : Apples ,Cookies, Milk Or Bread, populate the HashMaps
         populateMapsBasedonName(); //returns boolean, not capturing it as added for TDD only.
         formatOutPut(); // Method to format the output
-        System.out.println(str);
+       // System.out.println(str);
+        WriteStringOnFile();//Write the string to a file
+    }
+
+    private void WriteStringOnFile() throws IOException {
+        File newTextFile = new File("MyPrettyOutput.txt");
+        FileWriter fw = new FileWriter(newTextFile);
+        fw.write(str.toString());
+        fw.close();
     }
 
     //Split each product entry by ;@^%*! to get Name,Price,Type,Expiration and add product in product list.
@@ -57,7 +69,7 @@ public class JerkSonParserList {
         for(String s : productMap.keySet())
         {
             if(s.equals("Milk")) {
-                str.append(String.format("\nname:%8s        seen:%2d times\n", s, milkCounter));
+                str.append(String.format("name:%8s        seen:%2d times\n", s, milkCounter));
                 str.append("============= \t \t =============\n");
                 for(Map.Entry milk : priceMapMilk.entrySet())
                 {
@@ -234,5 +246,6 @@ public class JerkSonParserList {
         }
         return output;
     }
+
 
 }
