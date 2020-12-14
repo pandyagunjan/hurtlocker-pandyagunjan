@@ -17,7 +17,7 @@ public class JerkSonParserList {
     int cookieCounter=0;
     int breadCounter=0;
     int appleCounter=0;
-    LinkedHashMap<Double ,Integer> prices = new LinkedHashMap<>();
+    //LinkedHashMap<Double ,Integer> prices = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapMilk = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapCookies = new LinkedHashMap<>();
     LinkedHashMap<Double ,Integer> priceMapBread = new LinkedHashMap<>();
@@ -41,11 +41,12 @@ public class JerkSonParserList {
         WriteStringOnFile();//Write the string to a file
     }
 
-    private void WriteStringOnFile() throws IOException {
+    private Boolean WriteStringOnFile() throws IOException {
         File newTextFile = new File("MyPrettyOutput.txt");
         FileWriter fw = new FileWriter(newTextFile);
         fw.write(str.toString());
         fw.close();
+        return true;
     }
 
     //Split each product entry by ;@^%*! to get Name,Price,Type,Expiration and add product in product list.
@@ -70,7 +71,7 @@ public class JerkSonParserList {
         {
             if(s.equals("Milk")) {
                 str.append(String.format("name:%8s        seen:%2d times\n", s, milkCounter));
-                str.append("============= \t \t =============\n");
+                str.append("=============        =============\n");
                 for(Map.Entry milk : priceMapMilk.entrySet())
                 {
                     str.append(String.format("Price:%7s        seen:%2d time%s\n", milk.getKey(), milk.getValue(),plural((Integer) milk.getValue())));
@@ -81,7 +82,7 @@ public class JerkSonParserList {
             else
             if(s.equals("Bread")) {
                 str.append(String.format("\nname:%8s        seen:%2d times\n", s, breadCounter));
-                str.append("============= \t \t =============\n");
+                str.append("=============        =============\n");
                 for(Map.Entry bread : priceMapBread.entrySet())
                 {
                     str.append(String.format("Price:%7s        seen:%2d time%s\n", bread.getKey(), bread.getValue(),plural((Integer) bread.getValue())));
@@ -91,7 +92,7 @@ public class JerkSonParserList {
             else
             if(s.equals("Apples")) {
                 str.append(String.format("\nname:%8s        seen:%2d times\n", s, appleCounter));
-                str.append("============= \t \t =============\n");
+                str.append("=============        =============\n");
                 for(Map.Entry apples : priceMapApples.entrySet())
                 {
                     str.append(String.format("Price:%7s        seen:%2d time%s\n", apples.getKey(), apples.getValue(),plural((Integer) apples.getValue())));
@@ -101,7 +102,7 @@ public class JerkSonParserList {
            else
             if(s.equals("Cookies")) {
                 str.append(String.format("\nname:%8s        seen:%2d times\n", s, cookieCounter));
-                str.append("============= \t \t =============\n");
+                str.append("=============        =============\n");
                 for(Map.Entry cookies : priceMapCookies.entrySet())
                 {
                     str.append(String.format("Price:%7s        seen:%2d time%s\n", cookies.getKey(), cookies.getValue(),plural((Integer) cookies.getValue())));
@@ -115,7 +116,6 @@ public class JerkSonParserList {
 
     private String plural(Integer value) {
         return value >1 ? "s" : "";
-
     }
 
 
@@ -182,7 +182,6 @@ public class JerkSonParserList {
     private Boolean populateMilkHashMap(Product p) {
         Boolean flag;
         milkCounter++;
-        prices.getOrDefault(p.getPrice(),0);
         Integer temp=priceMapMilk.getOrDefault(p.getPrice(),0);
         priceMapMilk.put(p.getPrice(), temp+1);
         productMap.put("Milk" , priceMapMilk);
