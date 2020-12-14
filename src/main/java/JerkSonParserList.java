@@ -10,13 +10,11 @@ public class JerkSonParserList {
     ArrayList<Product> products= new ArrayList();
 
     public Product pasreTheLine(String output) {
-        //Split based on ##
+        //Split based on ## and Display it
       splittedLines = SplitBasedOnDelimeter(output);
         for (String s: splittedLines) {
             System.out.println(s);
-
         }
-
         System.out.println(splittedLines.length);
        for(int i=0 ; i < splittedLines.length;i++) {
            //Split each product entry by ;@^%*!
@@ -40,8 +38,9 @@ public class JerkSonParserList {
         Matcher matcherExpiration = expiration.matcher(parseSingleProduct[3]);
         if (matcherExpiration.find()) {
             // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
+            // Does not work so changed to date as String in POJO
             product.setExpiration(matcherExpiration.group(1));
-            //For each array of String set the Product POJO - ArrayList ??
+
         }
     }
 
@@ -74,7 +73,7 @@ public class JerkSonParserList {
         }
         else
             product.setName("");
-        //return matcher;
+
     }
 
     private String[] SplitBasedOnDelimeter(String output) {
