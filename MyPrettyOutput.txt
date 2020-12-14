@@ -2,7 +2,7 @@ name:    Milk        seen: 6 times
 ============= 	 	 =============
 Price:   3.23        seen: 5 times
 -------------        -------------
-Price:   1.23        seen: 1 times
+Price:   1.23        seen: 1 time
 -------------        -------------
 
 name:   Bread        seen: 6 times
