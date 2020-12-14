@@ -4,7 +4,7 @@ public class Product {
     private String name;
     private Double price;
     private String type;
-    private Date expiration;
+    private String expiration;
 
     public Product()
     {
@@ -14,7 +14,7 @@ public class Product {
         this.expiration = null;
     }
 
-    public Product(String name, Double price, String type, Date expiration) {
+    public Product(String name, Double price, String type, String expiration) {
         this.name = name;
         this.price = price;
         this.type = type;
@@ -45,13 +45,21 @@ public class Product {
         this.type = type;
     }
 
-    public Date getExpiration() {
+    public String getExpiration() {
         return expiration;
     }
 
-    public void setExpiration(Date expiration) {
+    public void setExpiration(String expiration) {
         this.expiration = expiration;
     }
 
-
+    @Override
+    public String toString() {
+        return "Product{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", type='" + type + '\'' +
+                ", expiration=" + expiration +
+                '}';
+    }
 }
