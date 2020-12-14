@@ -38,7 +38,7 @@ public class JerkSonParserList {
         Matcher matcherExpiration = expiration.matcher(parseSingleProduct[3]);
         if (matcherExpiration.find()) {
             // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy");
-            // Does not work so changed to date as String in POJO
+            // Does not work so changed to String instead of Date in POJO
             product.setExpiration(matcherExpiration.group(1));
 
         }
